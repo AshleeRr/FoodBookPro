@@ -36,6 +36,7 @@ namespace FoodBookPro.Data
             services.AddTransient<IOrderRepository,OrderRepository>();
             services.AddTransient<IPaymentRepository,PaymentRepository>();
             services.AddTransient<IRestaurantRepository,RestaurantRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
         }
     }
 }
