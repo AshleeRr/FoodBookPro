@@ -7,6 +7,8 @@ using FoodBookPro.Data.Domain.Common;
 using FoodBookPro.Data.Application.ViewModels.Users;
 using FoodBookPro.Data.Domain.Entities;
 
+
+//Basic Functionalities
 public class UserServiceBasicTests
 {
     private readonly Mock<IUserRepository> _userRepoMock;
