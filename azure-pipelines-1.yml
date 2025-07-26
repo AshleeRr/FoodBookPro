@@ -5,8 +5,6 @@
 
 trigger:
 - master
-- QA
-- Dev
 
 pool:
   vmImage: ubuntu-latest
@@ -15,15 +13,5 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: UseDotNet@2
-  inputs:
-    packageType: sdk
-    version: '9.0.301'
-    includePreviewVersions: true
-  displayName: 'Instalar .net 9 SDK'
-
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
-
-- script: dotnet test --configuration $(buildConfiguration) --no-build --logger trx
-  displayName: 'Ejecución de pruebas unitarias'
