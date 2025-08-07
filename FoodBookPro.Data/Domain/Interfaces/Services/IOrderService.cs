@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FoodBookPro.Data.Application.ViewModels.Orders;
+using FoodBookPro.Data.Domain.Common;
+using FoodBookPro.Data.Domain.Entities;
 
 namespace FoodBookPro.Data.Domain.Interfaces.Services
 {
-    internal class IOrderService
+    public interface IOrderService : IGenericService<SaveOrderViewModel, OrderViewModel, Order>
     {
+        Task<OperationResult<int>> GetDailyOrderCount(int restaurantId, DateTime date);
+        Task<OperationResult<List<(string ItemName, int TotalSold)>>> GetMostOrderedMenuItems(int restaurantId, int topN = 5);
     }
 }

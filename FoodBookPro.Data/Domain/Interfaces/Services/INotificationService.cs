@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FoodBookPro.Data.Domain.Common;
 
 namespace FoodBookPro.Data.Domain.Interfaces.Services
 {
-    internal class INotificationService
+    public interface INotificationService
     {
+        Task<OperationResult<bool>> MarkNotificationAsRead(int notificationId);
     }
 }
