@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using FoodBookPro.Data.Domain.Interfaces.Repositories;
+using FoodBookPro.Data.Domain.Interfaces.Services;
+using System.Reflection;
 
 namespace FoodBookPro.Data
 {
@@ -37,6 +39,10 @@ namespace FoodBookPro.Data
             services.AddTransient<IPaymentRepository,PaymentRepository>();
             services.AddTransient<IRestaurantRepository,RestaurantRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+
+            services.AddTransient<IUserService, UserService>();
+
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
         }
     }
 }

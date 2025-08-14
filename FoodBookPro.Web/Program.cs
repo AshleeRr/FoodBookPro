@@ -13,8 +13,11 @@ namespace FoodBookPro.Web
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDataIoc(builder.Configuration);
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddSession();
 
             var app = builder.Build();
+            app.UseSession();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -32,7 +35,7 @@ namespace FoodBookPro.Web
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                pattern: "{controller=User}/{action=Login}/{id?}")
                 .WithStaticAssets();
 
             app.Run();
