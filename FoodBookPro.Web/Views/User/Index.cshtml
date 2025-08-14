@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Users";
+    var currentUser = ViewBag.CurrentUser as string;
+}
+
+<h2>Welcome to the User Page</h2>
+
+@if (!string.IsNullOrEmpty(currentUser))
+{
+    <p>Hello, <strong>@currentUser</strong>! <a asp-action="Logout" class="btn btn-danger btn-sm">Logout</a></p>
+}
+else
+{
+    <p>You are not logged in. <a asp-action="Login" class="btn btn-primary btn-sm">Login</a></p>
+}
+

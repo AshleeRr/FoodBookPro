@@ -12,59 +12,75 @@ namespace FoodBookPro.Data.Application.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository, IMapper mapper) : base(userRepository, mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper)
+            : base(userRepository, mapper)
         {
             _userRepository = userRepository;
             _mapper = mapper;
         }
 
-        public async Task<OperationResult<UserViewModel>>? Login(LoginViewModel vm)
+        public async Task<OperationResult<UserViewModel>> Login(LoginViewModel vm)
         {
             if (vm == null)
-                throw new ArgumentNullException(nameof(vm), "Login model cannot be null.");
+                return OperationResult<UserViewModel>.Failure("Login model cannot be null.", null, default);
 
             var result = await _userRepository.LoginAsync(vm);
-            if (result == null)
-                throw new NullReferenceException("Repository returned null for LoginAsync.");
 
-            return _mapper.Map<OperationResult<UserViewModel>>(result);
+            if (result == null || !result.IsSuccess)
+                return OperationResult<UserViewModel>.Failure(result?.Message ?? "Invalid credentials.", result?.Errors, default);
+
+            return MapOperationResult(result);
         }
 
         public async Task<OperationResult<UserViewModel>> GetByUsername(string username)
         {
             if (string.IsNullOrWhiteSpace(username))
-                throw new ArgumentNullException(nameof(username), "Username cannot be null or empty.");
+                return OperationResult<UserViewModel>.Failure("Username cannot be null or empty.", null, default);
 
             var result = await _userRepository.GetByUsernameAsync(username);
-            if (result == null)
-                throw new NullReferenceException("Repository returned null for GetByUsernameAsync.");
 
-            return _mapper.Map<OperationResult<UserViewModel>>(result);
+            if (result == null || !result.IsSuccess)
+                return OperationResult<UserViewModel>.Failure(result?.Message ?? "User not found.", result?.Errors, default);
+
+            return MapOperationResult(result);
         }
 
         public async Task<OperationResult<UserViewModel>> GetByIdViewModel(int id)
         {
             var result = await _userRepository.GetByIdAsync(id);
-            if (result == null)
-                throw new NullReferenceException("Repository returned null for GetByIdAsync.");
 
-            return _mapper.Map<OperationResult<UserViewModel>>(result);
+            if (result == null || !result.IsSuccess)
+                return OperationResult<UserViewModel>.Failure(result?.Message ?? $"User with ID {id} not found.", result?.Errors, default);
+
+            return MapOperationResult(result);
         }
 
         public async Task<OperationResult<UserViewModel>> UpdateWithEncryption(SaveUserViewModel vm, int id)
         {
             if (vm == null)
-                throw new ArgumentNullException(nameof(vm), "User model cannot be null.");
+                return OperationResult<UserViewModel>.Failure("User model cannot be null.", null, default);
 
             var entity = _mapper.Map<User>(vm);
             if (entity == null)
-                throw new NullReferenceException("Mapper returned null when mapping SaveUserViewModel to User.");
+                return OperationResult<UserViewModel>.Failure("Error mapping SaveUserViewModel to User entity.", null, default);
 
             var result = await _userRepository.UpdateWithEncryptionAsync(entity, id);
-            if (result == null)
-                throw new NullReferenceException("Repository returned null for UpdateWithEncryptionAsync.");
 
-            return _mapper.Map<OperationResult<UserViewModel>>(result);
+            if (result == null || !result.IsSuccess)
+                return OperationResult<UserViewModel>.Failure(result?.Message ?? $"Failed to update user with ID {id}.", result?.Errors, default);
+
+            return MapOperationResult(result);
+        }
+
+        /// <summary>
+        /// Mapea un OperationResult<User> a OperationResult<UserViewModel>.
+        /// </summary>
+        private OperationResult<UserViewModel> MapOperationResult(OperationResult<User> result)
+        {
+            return OperationResult<UserViewModel>.Success(
+                _mapper.Map<UserViewModel>(result.Data),
+                result.Message
+            );
         }
     }
 }
