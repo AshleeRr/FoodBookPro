@@ -2,7 +2,7 @@
 using System.Text;
 
 namespace FoodBookPro.Data.Application.Helpers
-{//Comment: This class provides a method to compute the SHA256 hash of a given password.
+{//Comment: This class provides a method to compute the SHA256 hash of a given password. 2
     public class PasswordEncryptation
     {
         public static string ComputeSha256Hash(string password)
